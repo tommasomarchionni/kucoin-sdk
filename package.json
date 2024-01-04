@@ -1,0 +1,43 @@
+{
+  "name": "@tommasomarchionni/kucoin-sdk",
+  "version": "0.0.1",
+  "description": "This is a lightweight library that works as a connector to the Kraken public API.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "npx jest --runInBand",
+    "build": "tsup",
+    "dev": "ts-node ./examples/restful/trade/getOrderList.ts",
+    "lint": "eslint --config .eslintrc.json --ext ts . --fix"
+  },
+  "keywords": [
+    "Kucoin",
+    "API"
+  ],
+  "author": "Tommaso Marchionni",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "@types/node": "^20.10.6",
+    "@types/uuid": "^9.0.7",
+    "@types/ws": "^8.5.5",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.48.0",
+    "jest": "^29.6.4",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.13.0"
+  }
+}
