@@ -12,6 +12,47 @@ export function mixinTrade<T extends Constructor>(base: T): Constructor<TradeMet
     return class extends base {
 
         /**
+         * Get Order Details by clientOid - (General) {@link https://www.kucoin.com/docs/rest/spot-trading/orders/get-order-details-by-clientoid}
+         * Request via this interface to check the information of a single active order via clientOid. The system will prompt that the order does not exists if the order does not exist or has been settled.
+         * 
+         * @param {string} [clientOid] - Unique order id created by users to identify their orders
+         */
+        async getOrderDetailsByClientOid(clientOid: string): Promise<DataResponse<OrderDetails>> {
+            validateRequiredParameters({ 
+                clientOid
+            });
+
+            return await this.makeRequest('GET', '/order/client-order/'+clientOid);
+        }
+
+        /**
+         * Get Order Details by orderId - (General) {@link https://www.kucoin.com/docs/rest/spot-trading/orders/get-order-details-by-orderid}
+         * 
+         * @param {string} [orderId] - Order ID, unique ID of the order.
+         */
+        async getOrderDetailsByOrderId(orderId: string): Promise<DataResponse<OrderDetails>> {
+            validateRequiredParameters({ 
+                orderId
+            });
+
+            return await this.makeRequest('GET', '/orders/'+orderId);
+        }
+
+        /**
+         * Get Order List - (General) {@link https://www.kucoin.com/docs/rest/spot-trading/orders/get-order-list}
+         * Request via this endpoint to get your current order list. The return value is the data after Pagination, sorted in descending order according to time.
+         * 
+         * @param {object?} [options]
+         * @param {OrderStatus?} [options.status] - active or done(done as default), Only list orders with a specific status.
+         */
+        async getOrderList(options?: GetOrderListOptions): Promise<DataResponse<PaginatedData<OrderDetails>>> {
+            const url = this.prepareSignedPath('/orders',
+                options ? options : {}
+            );
+            return await this.makeRequest('GET', url);
+        }
+
+        /**
         * Place Order - (Spot Trading or Margin Trading) {@link https://www.kucoin.com/docs/rest/spot-trading/orders/place-order}
         *
         * @param {object} [options]
@@ -46,47 +87,6 @@ export function mixinTrade<T extends Constructor>(base: T): Constructor<TradeMet
             });
 
             return await this.makeRequest('POST', '/orders', options);
-        }
-
-        /**
-         * Get Order Details by orderId - (General) {@link https://www.kucoin.com/docs/rest/spot-trading/orders/get-order-details-by-orderid}
-         * 
-         * @param {string} [orderId] - Order ID, unique ID of the order.
-         */
-        async getOrderDetailsByOrderId(orderId: string): Promise<DataResponse<OrderDetails>> {
-            validateRequiredParameters({ 
-                orderId
-            });
-
-            return await this.makeRequest('GET', '/orders/'+orderId);
-        }
-
-        /**
-         * Get Order Details by clientOid - (General) {@link https://www.kucoin.com/docs/rest/spot-trading/orders/get-order-details-by-clientoid}
-         * Request via this interface to check the information of a single active order via clientOid. The system will prompt that the order does not exists if the order does not exist or has been settled.
-         * 
-         * @param {string} [clientOid] - Unique order id created by users to identify their orders
-         */
-        async getOrderDetailsByClientOid(clientOid: string): Promise<DataResponse<OrderDetails>> {
-            validateRequiredParameters({ 
-                clientOid
-            });
-
-            return await this.makeRequest('GET', '/order/client-order/'+clientOid);
-        }
-
-        /**
-         * Get Order List - (General) {@link https://www.kucoin.com/docs/rest/spot-trading/orders/get-order-list}
-         * Request via this endpoint to get your current order list. The return value is the data after Pagination, sorted in descending order according to time.
-         * 
-         * @param {object?} [options]
-         * @param {OrderStatus?} [options.status] - active or done(done as default), Only list orders with a specific status.
-         */
-        async getOrderList(options?: GetOrderListOptions): Promise<DataResponse<PaginatedData<OrderDetails>>> {
-            const url = this.prepareSignedPath('/orders',
-                options ? options : {}
-            );
-            return await this.makeRequest('GET', url);
         }
     };
 }

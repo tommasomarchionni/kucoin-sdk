@@ -68,7 +68,7 @@ export interface OrderDetails {
     /**
      * Order ID, the ID of an order
      */
-    orderId: string;
+    id: string;
 
     /**
      * symbol

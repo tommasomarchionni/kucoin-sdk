@@ -15,9 +15,9 @@ const client = new Spot(
 );
 
 try {
-    const orderId = '1';
-    client.getOrderDetailsByOrderId(orderId).then((res: DataResponse<RestTradeTypes.OrderDetails>) => {
-        console.log('getOrderDetailsByOrderId', res);
+    const clientOid = '1';
+    client.getOrderDetailsByClientOid(clientOid).then((res: DataResponse<RestTradeTypes.OrderDetails>) => {
+        console.log('getOrderDetailsByClientOid', res);
     }).catch(err => { console.log(err); });
 } catch(e) {
     console.log(e);
