@@ -1,8 +1,9 @@
 import * as crypto from 'crypto';
 
-import axios, { AxiosProxyConfig } from 'axios';
+import axios, { AxiosInstance, AxiosProxyConfig } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { appName, appVersion } from './constants';
+import { LoggerInterface } from '../setters/mixinBase';
 
 interface HttpRequestConfig<TParam> {
     baseURL: string;
@@ -17,12 +18,13 @@ interface HttpRequestConfig<TParam> {
     timeout?: number;
     proxy?: AxiosProxyConfig | false;
     httpsAgent?: boolean;
+    logger?: LoggerInterface;
 }
 
-export async function httpRequest<TParam>(config: HttpRequestConfig<TParam>) {
+export async function httpRequest<TParam>(instance: AxiosInstance, config: HttpRequestConfig<TParam>) {
     
     try {
-        const { baseURL, prefix, apiKey, secret, passphrase, apiKeyVersion, method, url, timeout, proxy, httpsAgent, params } = config;
+        const { baseURL, prefix, apiKey, secret, passphrase, apiKeyVersion, method, url, timeout, proxy, httpsAgent, params, logger } = config;
         const options = {
             baseURL,
             timeout,
@@ -42,16 +44,43 @@ export async function httpRequest<TParam>(config: HttpRequestConfig<TParam>) {
         };
 
         if (method.toUpperCase() === 'POST') {
-            const { data } = await axios.post(prefix + url, params, options);
+
+            if (logger) {
+                logger.debug(
+                    {
+                        method: 'POST',
+                        url: prefix + url,
+                        params,
+                        options
+                    }
+                );
+            }
+
+            const { data } = await instance.post(prefix + url, params, options);
             return data;
         } else {
-            const { data } = await axios.request(options);
+
+            if (logger) {
+                logger.debug(
+                    {
+                        method: options.method,
+                        options
+                    }
+                );
+            }
+
+            const { data } = await instance.request(options);
             return data;
         }
         
     } catch (error) {
+
+        if (config.logger) {
+            config.logger.debug(error);
+        }
+
         if (axios.isAxiosError(error) && error.response) {
-            throw new Error(error.response.status + ': ' + error.response.statusText);
+            throw new Error(error.response.status + ': ' + error.response.statusText + ', ' +  JSON.stringify(error));
         } else {
             throw new Error('Http request error');
         }

@@ -1,6 +1,6 @@
 {
   "name": "@tommasomarchionni/kucoin-sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a lightweight library that works as a connector to the Kraken public API.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -8,7 +8,7 @@
   "scripts": {
     "test": "npx jest --runInBand",
     "build": "tsup",
-    "dev": "ts-node ./examples/restful/trade/getOrderList.ts",
+    "dev": "ts-node ./examples/restful/wallet/getAccountList.ts",
     "lint": "eslint --config .eslintrc.json --ext ts . --fix"
   },
   "keywords": [
